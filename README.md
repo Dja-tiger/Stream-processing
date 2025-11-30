@@ -13,16 +13,26 @@
 
 ## Запуск локально через Docker Compose
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
-## Тестовый сценарий Postman/Newman
-1. Импортируйте коллекцию `postman/stream-processing.postman_collection.json`.
-2. Переменная `baseUrl` уже задана как `arch.homework` (требование ДЗ). Для локального прогона оставьте значение по умолчанию или переопределите флагом newman `--env-var baseUrl=http://localhost`.
-3. Запустите newman с выводом запросов и ответов:
+## Проверка через Newman
+
+Для проверки сценария ДЗ используется коллекция `postman/stream-processing.postman_collection.json`
+c переменной `{{baseUrl}}`, initial value — `http://arch.homework`.
+
+Пример прогона:
+
 ```bash
-newman run postman/stream-processing.postman_collection.json --reporters cli --verbose
-```
+newman run postman/stream-processing.postman_collection.json \
+  --env-var baseUrl=http://arch.homework \
+  --reporters cli \
+  --reporter-cli-show-body \
+  --reporter-cli-show-request-headers \
+  --reporter-cli-show-response-headers \
+  --verbose | tee newman-run.log
+
+
 Сценарий проходит этапы: создание пользователя с аккаунтом, пополнение, успешный заказ, проверка баланса и уведомлений, неуспешный заказ при недостатке средств и проверка, что баланс не изменился, а уведомление добавилось.
 
 ## Helm-установка
